@@ -18,4 +18,22 @@ export class UserRepository {
 
     return emailAlreadyExists !== undefined;
   }
+
+  async update(id: string, newData: Partial<UserEntity>) {
+    const user = this.users.find((savedUser) => savedUser.id === id);
+
+    if (!user) {
+      throw new Error('User does not exist');
+    }
+
+    Object.entries(newData).forEach(([key, value]) => {
+      if (key === 'id') {
+        return;
+      }
+
+      user[key] = value;
+    });
+
+    return user;
+  }
 }
