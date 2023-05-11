@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UserRepository } from '../user.repository';
 import {
-  ValidationArguments,
   ValidatorConstraint,
   ValidatorConstraintInterface,
   ValidationOptions,
@@ -13,10 +12,7 @@ import {
 export class UniqueEmailValidator implements ValidatorConstraintInterface {
   constructor(private userRepository: UserRepository) {}
 
-  async validate(
-    value: any,
-    validationArguments?: ValidationArguments,
-  ): Promise<boolean> {
+  async validate(value: any): Promise<boolean> {
     const userAlreadyExists = await this.userRepository.checkEmail(value);
     return !userAlreadyExists;
   }
