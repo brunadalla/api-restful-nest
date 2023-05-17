@@ -5,59 +5,50 @@ import {
   IsArray,
   IsNotEmpty,
   MaxLength,
-  IsUrl,
   Min,
   ArrayMinSize,
-  IsUUID,
+  IsOptional,
 } from 'class-validator';
+import {
+  ProductCharacteristicsDTO,
+  ProductImagesDTO,
+} from './CreateProduct.dto';
 
-export class ProductCharacteristicsDTO {
+export class UpdateProductDTO {
+  @IsOptional()
   @IsNotEmpty({ message: "The name can't be empty" })
   name: string;
 
-  @IsNotEmpty({ message: "The description can't be empty" })
-  description: string;
-}
-
-export class ProductImagesDTO {
-  @IsUrl()
-  url: string;
-
-  @IsNotEmpty({ message: "The description can't be empty" })
-  description: string;
-}
-
-export class CreateProductDTO {
-  @IsUUID(undefined, { message: 'Invalid User ID' })
-  userId: string;
-
-  @IsNotEmpty({ message: "The name can't be empty" })
-  name: string;
-
+  @IsOptional()
   @IsNumber({ maxDecimalPlaces: 2, allowNaN: false, allowInfinity: false })
   @Min(1, { message: 'The minimum quantity is 1' })
   value: number;
 
+  @IsOptional()
   @IsNumber()
   @Min(0, { message: 'The minimum quantity is 0' })
   quantity: number;
 
+  @IsOptional()
   @IsNotEmpty({ message: "The description can't be empty" })
   @MaxLength(1000, { message: 'The maximum length is 1000' })
   description: string;
 
+  @IsOptional()
   @ValidateNested()
   @IsArray()
   @ArrayMinSize(3)
   @Type(() => ProductCharacteristicsDTO)
   characteristics: ProductCharacteristicsDTO[];
 
+  @IsOptional()
   @ValidateNested()
   @IsArray()
   @ArrayMinSize(1)
   @Type(() => ProductImagesDTO)
   images: ProductImagesDTO[];
 
+  @IsOptional()
   @IsNotEmpty({ message: "The category can't be empty" })
   category: string;
 }

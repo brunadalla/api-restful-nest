@@ -5,12 +5,14 @@ import { UserEntity } from './user.entity';
 export class UserRepository {
   private users: UserEntity[] = [];
 
-  async save(user: UserEntity) {
-    this.users.push(user);
-  }
+  private searchById(id: string) {
+    const user = this.users.find((savedUser) => savedUser.id === id);
 
-  async list() {
-    return this.users;
+    if (!user) {
+      throw new Error('User does not exist');
+    }
+
+    return user;
   }
 
   async checkEmail(email: string) {
@@ -19,12 +21,16 @@ export class UserRepository {
     return emailAlreadyExists !== undefined;
   }
 
-  async update(id: string, newData: Partial<UserEntity>) {
-    const user = this.users.find((savedUser) => savedUser.id === id);
+  async save(user: UserEntity) {
+    this.users.push(user);
+  }
 
-    if (!user) {
-      throw new Error('User does not exist');
-    }
+  async list() {
+    return this.users;
+  }
+
+  async update(id: string, newData: Partial<UserEntity>) {
+    const user = this.searchById(id);
 
     Object.entries(newData).forEach(([key, value]) => {
       if (key === 'id') {
@@ -34,6 +40,12 @@ export class UserRepository {
       user[key] = value;
     });
 
+    return user;
+  }
+
+  async delete(id: string) {
+    const user = this.searchById(id);
+    this.users = this.users.filter((savedUser) => savedUser.id !== id);
     return user;
   }
 }
